@@ -1,0 +1,38 @@
+﻿@page
+@model RazorShop.Pages.CartModel
+@{
+    ViewData["Title"] = "Корзина";
+}
+
+<h1>Корзина</h1>
+
+@if (Model.CartItems.Count == 0)
+{
+    <p>Ваша корзина пуста</p>
+}
+else
+{
+    decimal totalPrice = 0;
+    @foreach (var item in Model.CartItems)
+    {
+        var product = Model.Products.FirstOrDefault(p => p.Id == item.Key);
+        if (product != null)
+        {
+            decimal itemTotal = product.Price * item.Value;
+            totalPrice += itemTotal;
+            <div>
+                <h3>@product.Name</h3>
+                <p>Цена за единицу: $@product.Price</p>
+                <p>Количество: @item.Value</p>
+                <p>Общая стоимость: $@itemTotal</p>
+                <form method="post">
+                    <input type="hidden" name="productId" value="@product.Id" />
+                    <button type="submit">Удалить</button>
+                </form>
+            </div>
+        }
+    }
+    <h2>Общая сумма: $@totalPrice</h2>
+}
+
+<a href="/Products"><button>Перейти к товарам</button></a>
